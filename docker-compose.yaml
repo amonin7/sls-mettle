@@ -9,11 +9,11 @@ services:
     ports:
       - "5432:5432"
 
-  sls-mettle:
-    depends_on:
-      - postgre
-    ports:
-      - "8080:8080"
-    build: .
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgre:5432/items
+#  sls-mettle:
+#    depends_on:
+#      - postgre
+#    ports:
+#      - "8080:8080"
+#    build: .
+#    environment:
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://postgre:5432/items
