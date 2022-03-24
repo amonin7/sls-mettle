@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  postgres:
+  postgre:
     image: postgres:13.3
     environment:
       POSTGRES_DB: items
@@ -8,3 +8,12 @@ services:
       POSTGRES_PASSWORD: itempguser
     ports:
       - "5432:5432"
+
+  sls-mettle:
+    depends_on:
+      - postgre
+    ports:
+      - "8080:8080"
+    build: .
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgre:5432/items
