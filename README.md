@@ -21,6 +21,7 @@ cd sls-mettle/
 4. [PostgreSQL 14](https://www.postgresql.org/)
 5. [Flyway migration](https://flywaydb.org/)
 6. [Docker](https://www.docker.com/)
+7. [Log4j2](https://logging.apache.org/log4j/2.x/)
 
 ## Required Tasks
 

@@ -19,8 +19,9 @@ import java.util.UUID;
 public class PsqlItemsService implements ItemsService {
 
     private static final Logger log = LogManager.getLogger(ItemsService.class);
-    private static final String ELEMENT_ALREADY_EXISTS = "The item with such ID already exists.";
-    private static final String NO_ITEM_WITH_ID = "There is no item with such ID";
+    private static final String COMMON_DESCR = "The item with ID=";
+    private static final String ELEMENT_ALREADY_EXISTS = " already exists";
+    private static final String NO_ITEM_WITH_ID = " does not exist";
 
     private final ItemsRepository itemsRepository;
 
@@ -81,11 +82,13 @@ public class PsqlItemsService implements ItemsService {
         Optional<Item> optionalItem = this.itemsRepository.findById(uuid);
         if (optionalItem.isPresent() ^ isNeededToExist) {
             if (isNeededToExist) {
-                log.error(NO_ITEM_WITH_ID);
-                throw new NoSuchElementException(NO_ITEM_WITH_ID);
+                String message = COMMON_DESCR + uuid + NO_ITEM_WITH_ID;
+                log.error(message);
+                throw new NoSuchElementException(message);
             } else {
-                log.error(ELEMENT_ALREADY_EXISTS);
-                throw new KeyAlreadyExistsException(ELEMENT_ALREADY_EXISTS);
+                String message = COMMON_DESCR + uuid + ELEMENT_ALREADY_EXISTS;
+                log.error(message);
+                throw new KeyAlreadyExistsException(message);
             }
         }
         return optionalItem.orElse(null);
