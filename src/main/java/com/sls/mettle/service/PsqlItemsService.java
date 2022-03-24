@@ -31,7 +31,7 @@ public class PsqlItemsService implements ItemsService {
     @Override
     public Item addItem(Item item) {
         Optional<Item> optionalItem = this.itemsRepository.findById(item.getId());
-        if (optionalItem.isEmpty()) {
+        if (optionalItem.isPresent()) {
             throw new KeyAlreadyExistsException("The item with such ID already exists.");
         }
         item.setUpdatedAt(Timestamp.from(Instant.now()));
@@ -67,5 +67,14 @@ public class PsqlItemsService implements ItemsService {
         oldItem.setDeletedAt(Timestamp.from(Instant.now()));
         this.itemsRepository.save(oldItem);
         return oldItem;
+    }
+
+    @Override
+    public Item getItem(String uuid) {
+        Optional<Item> optionalItem = this.itemsRepository.findById(UUID.fromString(uuid));
+        if (optionalItem.isEmpty()) {
+            throw new NoSuchElementException("There is no item with such ID");
+        }
+        return optionalItem.get();
     }
 }

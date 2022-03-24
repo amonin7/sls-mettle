@@ -40,8 +40,13 @@ public class MainController {
         return itemsService.updateItem(item);
     }
 
-    @DeleteMapping("/item?{uuid}")
+    @DeleteMapping("/item/{uuid}")
     public Item deleteItem(@PathVariable String uuid) {
         return itemsService.deleteItem(uuid);
+    }
+
+    @GetMapping("/item/{uuid}")
+    public Item getItem(@PathVariable String uuid) {
+        return itemsService.getItem(uuid);
     }
 }

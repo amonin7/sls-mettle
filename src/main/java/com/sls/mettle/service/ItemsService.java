@@ -9,4 +9,5 @@ public interface ItemsService {
     Item addItem(Item item);
     Item updateItem(Item item);
     Item deleteItem(String uuid);
+    Item getItem(String uuid);
 }
