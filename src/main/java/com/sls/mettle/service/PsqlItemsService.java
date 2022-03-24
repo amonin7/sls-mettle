@@ -1,7 +1,7 @@
 package com.sls.mettle.service;
 
-import com.sls.mettle.model.ElementAlreadyExistsException;
-import com.sls.mettle.model.InvalidItemException;
+import com.sls.mettle.exceprion.ElementAlreadyExistsException;
+import com.sls.mettle.exceprion.InvalidItemException;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.repository.ItemsRepository;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +20,7 @@ import java.util.UUID;
 public class PsqlItemsService implements ItemsService {
 
     private static final Logger log = LogManager.getLogger(ItemsService.class);
+
     private static final String COMMON_DESCR = "The item with ID=";
     private static final String ELEMENT_ALREADY_EXISTS = " already exists";
     private static final String NO_ITEM_WITH_ID = " does not exist";

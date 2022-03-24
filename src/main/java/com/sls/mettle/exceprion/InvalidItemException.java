@@ -1,4 +1,4 @@
-package com.sls.mettle.model;
+package com.sls.mettle.exceprion;
 
 public class InvalidItemException extends RuntimeException {
     public InvalidItemException(String message) {
