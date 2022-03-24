@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 @RestController
 public class MainController {
@@ -34,42 +33,31 @@ public class MainController {
     }
 
     @PostMapping("/item")
-    public ResponseEntity<Item> addItem(@JsonView(Views.Public.class) @RequestBody Item item) {
-        try {
-            return ResponseEntity.ok()
-                    .body(itemsService.addItem(item));
-        } catch (KeyAlreadyExistsException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> addItem(@JsonView(Views.Public.class) @RequestBody Item item) {
+        return processRequest(item, itemsService::addItem);
     }
 
     @PutMapping("/item")
-    public ResponseEntity<Item> editItem(@JsonView(Views.Public.class) @RequestBody Item item) {
-        try {
-            return ResponseEntity.ok()
-                    .body(itemsService.updateItem(item));
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> updateItem(@JsonView(Views.Public.class) @RequestBody Item item) {
+        return processRequest(item, itemsService::updateItem);
     }
 
     @DeleteMapping("/item/{uuid}")
-    public ResponseEntity<Item> deleteItem(@PathVariable String uuid) {
-        try {
-            return ResponseEntity.ok()
-                    .body(itemsService.deleteItem(uuid));
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.badRequest().body(null);
-        }
+    public ResponseEntity<Object> deleteItem(@PathVariable String uuid) {
+        return processRequest(uuid, itemsService::deleteItem);
     }
 
     @GetMapping("/item/{uuid}")
-    public ResponseEntity<Item> getItem(@PathVariable String uuid) {
+    public ResponseEntity<Object> getItem(@PathVariable String uuid) {
+        return processRequest(uuid, itemsService::getItem);
+    }
+
+    private <T> ResponseEntity<Object> processRequest(T input, Function<T, Item> inputMap) {
         try {
             return ResponseEntity.ok()
-                    .body(itemsService.getItem(uuid));
-        } catch (NoSuchElementException ex) {
-            return ResponseEntity.badRequest().body(null);
+                    .body(inputMap.apply(input));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
 }

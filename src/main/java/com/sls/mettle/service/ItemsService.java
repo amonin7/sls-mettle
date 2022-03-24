@@ -10,4 +10,5 @@ public interface ItemsService {
     Item updateItem(Item item);
     Item deleteItem(String uuid);
     Item getItem(String uuid);
+    boolean isValid(Item item);
 }

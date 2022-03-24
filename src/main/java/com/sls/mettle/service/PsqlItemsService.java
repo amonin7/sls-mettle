@@ -1,5 +1,7 @@
 package com.sls.mettle.service;
 
+import com.sls.mettle.model.ElementAlreadyExistsException;
+import com.sls.mettle.model.InvalidItemException;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.repository.ItemsRepository;
 import org.apache.logging.log4j.LogManager;
@@ -7,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.openmbean.KeyAlreadyExistsException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -37,6 +38,7 @@ public class PsqlItemsService implements ItemsService {
 
     @Override
     public Item addItem(Item item) {
+        isValid(item);
         tryFindElementById(item.getId(), false);
         item.setUpdatedAt(Timestamp.from(Instant.now()));
         item.setCreatedAt(Timestamp.from(Instant.now()));
@@ -47,6 +49,7 @@ public class PsqlItemsService implements ItemsService {
 
     @Override
     public Item updateItem(Item item) {
+        isValid(item);
         Item oldItem = tryFindElementById(item.getId(), true);
         oldItem.setName(item.getName());
         oldItem.setDescription(item.getDescription());
@@ -74,23 +77,47 @@ public class PsqlItemsService implements ItemsService {
         return tryFindElementById(uuid, true);
     }
 
+    @Override
+    public boolean isValid(Item item) {
+        boolean validationResult = item.getName().length() <= 20 &&
+                item.getDescription().length() <= 200 &&
+                item.getCost() >= 0.0 &&
+                item.getCreatedAt() == null &&
+                item.getUpdatedAt() == null &&
+                item.getDeletedAt() == null;
+
+        if (!validationResult) {
+            log.error("Provided item is not valid");
+            throw new InvalidItemException("Provided item is not valid");
+        }
+        return true;
+    }
+
     private Item tryFindElementById(String uuid, boolean isNeededToExist) {
-        return tryFindElementById(UUID.fromString(uuid), isNeededToExist);
+        try {
+            return tryFindElementById(UUID.fromString(uuid), isNeededToExist);
+        } catch (IllegalArgumentException ex) {
+            log.error("Could not parse ID=" + uuid + " as UUID");
+            throw ex;
+        }
     }
 
     private Item tryFindElementById(UUID uuid, boolean isNeededToExist) {
         Optional<Item> optionalItem = this.itemsRepository.findById(uuid);
         if (optionalItem.isPresent() ^ isNeededToExist) {
+            String message = constructExceptionDescription(uuid, isNeededToExist);
+            log.error(message);
             if (isNeededToExist) {
-                String message = COMMON_DESCR + uuid + NO_ITEM_WITH_ID;
-                log.error(message);
                 throw new NoSuchElementException(message);
             } else {
-                String message = COMMON_DESCR + uuid + ELEMENT_ALREADY_EXISTS;
-                log.error(message);
-                throw new KeyAlreadyExistsException(message);
+                throw new ElementAlreadyExistsException(message);
             }
         }
         return optionalItem.orElse(null);
+    }
+
+    private String constructExceptionDescription(UUID uuid, boolean isNeededToExist) {
+        return COMMON_DESCR + uuid +
+                (isNeededToExist ? NO_ITEM_WITH_ID : ELEMENT_ALREADY_EXISTS);
     }
 }
