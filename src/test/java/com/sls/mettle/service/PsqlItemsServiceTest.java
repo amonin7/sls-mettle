@@ -47,7 +47,6 @@ class PsqlItemsServiceTest {
     public void itemFoundByIncorrectId() {
         assertThrows(NoSuchElementException.class,
                 ()->itemsService.getItem(UUID.randomUUID().toString()));
-
     }
 
     @AfterEach
