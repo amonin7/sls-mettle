@@ -57,9 +57,9 @@ public class PsqlItemsService implements ItemsService {
         oldItem.setCost(item.getCost());
         oldItem.setType(item.getType().toString());
         oldItem.setUpdatedAt(Timestamp.from(Instant.now()));
-        this.itemsRepository.save(oldItem);
+        Item save = this.itemsRepository.save(oldItem);
         log.info("Successfully updated item");
-        return oldItem;
+        return save;
     }
 
     @Override
@@ -68,9 +68,9 @@ public class PsqlItemsService implements ItemsService {
         // it should be added here, but then I could not understand, why do we need a deleted_at property...
 //        this.itemsRepository.deleteById(oldItem.getId());
         oldItem.setDeletedAt(Timestamp.from(Instant.now()));
-        this.itemsRepository.save(oldItem);
+        Item save = this.itemsRepository.save(oldItem);
         log.info("Successfully deleted item");
-        return oldItem;
+        return save;
     }
 
     @Override
@@ -80,9 +80,10 @@ public class PsqlItemsService implements ItemsService {
 
     @Override
     public boolean isValid(Item item) {
-        boolean validationResult = item.getName().length() <= 20 &&
-                item.getDescription().length() <= 200 &&
-                item.getCost() >= 0.0 &&
+        boolean validationResult =
+                (item.getName() == null || item.getName().length() <= 20) &&
+                (item.getDescription() == null || item.getDescription().length() <= 200) &&
+                (item.getCost() == null || item.getCost() >= 0.0) &&
                 item.getCreatedAt() == null &&
                 item.getUpdatedAt() == null &&
                 item.getDeletedAt() == null;

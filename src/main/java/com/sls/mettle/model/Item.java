@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -44,5 +45,18 @@ public class Item {
 
     public void setType(String type) {
         this.type = ItemType.valueOfIgnoreCase(type);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+        Item item = (Item) o;
+        return id.equals(item.id) && Objects.equals(name, item.name) && Objects.equals(description, item.description) && type == item.type && Objects.equals(cost, item.cost);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, type, cost);
     }
 }
