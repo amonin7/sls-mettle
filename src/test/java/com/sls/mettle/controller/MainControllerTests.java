@@ -1,6 +1,5 @@
 package com.sls.mettle.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sls.mettle.service.ItemsService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -32,8 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(MainController.class)
 class MainControllerTests {
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mockMvc;

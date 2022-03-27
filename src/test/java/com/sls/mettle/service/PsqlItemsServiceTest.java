@@ -1,6 +1,5 @@
 package com.sls.mettle.service;
 
-import com.sls.mettle.exception.ElementAlreadyExistsException;
 import com.sls.mettle.exception.InvalidItemException;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.repository.ItemsRepository;
@@ -25,7 +24,6 @@ import static com.sls.mettle.testutils.TestData.I1_UPDATED;
 import static com.sls.mettle.testutils.TestData.I1_UUID;
 import static com.sls.mettle.testutils.TestData.I2;
 import static com.sls.mettle.testutils.TestData.I2_SAVED;
-import static com.sls.mettle.testutils.TestData.I2_WITH_ID;
 import static com.sls.mettle.testutils.TestData.ITEMS;
 import static com.sls.mettle.testutils.TestData.I_INVALID;
 import static com.sls.mettle.testutils.TestData.NOW;

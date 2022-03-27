@@ -3,8 +3,6 @@ package com.sls.mettle.testutils;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.model.ItemType;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
