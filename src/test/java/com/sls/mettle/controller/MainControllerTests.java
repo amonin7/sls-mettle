@@ -11,25 +11,24 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.sls.mettle.testutils.TestData.I1;
 import static com.sls.mettle.testutils.TestData.I1_CREATE_JSON;
 import static com.sls.mettle.testutils.TestData.I1_DELETED;
 import static com.sls.mettle.testutils.TestData.I1_SAVED;
 import static com.sls.mettle.testutils.TestData.I1_UPDATED;
 import static com.sls.mettle.testutils.TestData.I1_UPDATE_JSON;
 import static com.sls.mettle.testutils.TestData.I1_UUID;
-import static com.sls.mettle.testutils.TestData.I2;
+import static com.sls.mettle.testutils.TestData.I2_SAVED;
 import static com.sls.mettle.testutils.TestData.ITEMS;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(MainController.class)
 class MainControllerTests {
@@ -48,15 +47,15 @@ class MainControllerTests {
         mockMvc.perform(get("/items"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].id", is(I1.getId().toString())))
-                .andExpect(jsonPath("$[1].id", is(I2.getId().toString())));
+                .andExpect(jsonPath("$[0].id", is(I1_SAVED.getId().toString())))
+                .andExpect(jsonPath("$[1].id", is(I2_SAVED.getId().toString())));
         verify(itemsService, VerificationModeFactory.times(1)).getAllItems();
         reset(itemsService);
     }
 
     @Test
     void addItem() throws Exception {
-        Mockito.when(itemsService.addItem(I1)).thenReturn(I1_SAVED);
+        Mockito.when(itemsService.addItem(Mockito.any())).thenReturn(I1_SAVED);
         mockMvc.perform(post("/item")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(I1_CREATE_JSON))

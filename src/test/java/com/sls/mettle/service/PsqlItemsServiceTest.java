@@ -1,7 +1,7 @@
 package com.sls.mettle.service;
 
-import com.sls.mettle.exceprion.ElementAlreadyExistsException;
-import com.sls.mettle.exceprion.InvalidItemException;
+import com.sls.mettle.exception.ElementAlreadyExistsException;
+import com.sls.mettle.exception.InvalidItemException;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.repository.ItemsRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -24,6 +24,8 @@ import static com.sls.mettle.testutils.TestData.I1_UPD;
 import static com.sls.mettle.testutils.TestData.I1_UPDATED;
 import static com.sls.mettle.testutils.TestData.I1_UUID;
 import static com.sls.mettle.testutils.TestData.I2;
+import static com.sls.mettle.testutils.TestData.I2_SAVED;
+import static com.sls.mettle.testutils.TestData.I2_WITH_ID;
 import static com.sls.mettle.testutils.TestData.ITEMS;
 import static com.sls.mettle.testutils.TestData.I_INVALID;
 import static com.sls.mettle.testutils.TestData.NOW;
@@ -50,9 +52,9 @@ class PsqlItemsServiceTest {
 
     @Test
     public void itemFoundByCorrectId() {
-        Mockito.when(itemsRepository.findById(I1.getId())).thenReturn(Optional.of(I1));
+        Mockito.when(itemsRepository.findById(I1_SAVED.getId())).thenReturn(Optional.of(I1_SAVED));
         Item item = itemsService.getItem(I1_UUID);
-        assertThat(item.getName()).isEqualTo(I1.getName());
+        assertThat(item.getName()).isEqualTo(I1_SAVED.getName());
     }
 
     @Test
@@ -82,13 +84,6 @@ class PsqlItemsServiceTest {
     }
 
     @Test
-    public void tryAddExistingItem() {
-        Mockito.when(itemsRepository.findById(I2.getId())).thenReturn(Optional.of(I2));
-        assertThrows(ElementAlreadyExistsException.class,
-                ()->itemsService.addItem(I2));
-    }
-
-    @Test
     public void tryAddNormalItem() {
         Item item = itemsService.addItem(I1);
         assertThat(item).isEqualTo(I1_SAVED);
@@ -103,7 +98,7 @@ class PsqlItemsServiceTest {
 
     @Test
     public void tryEditNormalItem() {
-        Mockito.when(itemsRepository.findById(I1.getId())).thenReturn(Optional.of(I1));
+        Mockito.when(itemsRepository.findById(I1_SAVED.getId())).thenReturn(Optional.of(I1_SAVED));
         Mockito.when(itemsRepository.save(Mockito.any())).thenReturn(I1_UPDATED);
         Item item = itemsService.updateItem(I1_UPD);
         assertThat(item).isEqualTo(I1_UPDATED);
@@ -111,14 +106,14 @@ class PsqlItemsServiceTest {
 
     @Test
     public void tryDeleteNonExistentItem() {
-        Mockito.when(itemsRepository.findById(I2.getId())).thenReturn(Optional.empty());
+        Mockito.when(itemsRepository.findById(I2_SAVED.getId())).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class,
-                ()->itemsService.deleteItem(I2.getId().toString()));
+                ()->itemsService.deleteItem(I2_SAVED.getId().toString()));
     }
 
     @Test
     public void tryDeleteNormalItem() {
-        Mockito.when(itemsRepository.findById(I1.getId())).thenReturn(Optional.of(I1));
+        Mockito.when(itemsRepository.findById(I1_SAVED.getId())).thenReturn(Optional.of(I1_SAVED));
         Mockito.when(itemsRepository.save(Mockito.any())).thenReturn(I1_DELETED);
         Item item = itemsService.deleteItem(I1_UUID);
         assertThat(item).isEqualTo(I1_DELETED);

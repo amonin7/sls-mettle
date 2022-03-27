@@ -1,7 +1,7 @@
 package com.sls.mettle.service;
 
-import com.sls.mettle.exceprion.ElementAlreadyExistsException;
-import com.sls.mettle.exceprion.InvalidItemException;
+import com.sls.mettle.exception.ElementAlreadyExistsException;
+import com.sls.mettle.exception.InvalidItemException;
 import com.sls.mettle.model.Item;
 import com.sls.mettle.repository.ItemsRepository;
 import org.apache.logging.log4j.LogManager;
@@ -40,7 +40,6 @@ public class PsqlItemsService implements ItemsService {
     @Override
     public Item addItem(Item item) {
         isValid(item);
-        tryFindElementById(item.getId(), false);
         item.setUpdatedAt(Timestamp.from(Instant.now()));
         item.setCreatedAt(Timestamp.from(Instant.now()));
         Item save = itemsRepository.save(item);

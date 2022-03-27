@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @RestController
@@ -38,7 +39,7 @@ public class MainController {
     }
 
     @PutMapping("/item")
-    public ResponseEntity<Object> updateItem(@JsonView(Views.Public.class) @RequestBody Item item) {
+    public ResponseEntity<Object> updateItem(@JsonView(Views.PublicExtended.class) @RequestBody Item item) {
         return processRequest(item, itemsService::updateItem);
     }
 

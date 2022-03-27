@@ -1,4 +1,4 @@
-package com.sls.mettle.exceprion;
+package com.sls.mettle.exception;
 
 public class ElementAlreadyExistsException extends RuntimeException {
     public ElementAlreadyExistsException(String message) {
