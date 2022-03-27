@@ -1,0 +1,201 @@
+openapi: 3.0.3
+info:
+  title: sls-mettle
+  description: This is a simple Spring Boot application that hosts a REST web service and persists data in a database.
+  version: 1.0.0
+components:
+  schemas:
+    ItemToAdd:
+      type: object
+      nullable: false
+      properties:
+        name:
+          type: string
+          minLength: 0
+          maxLength: 20
+        description:
+          type: string
+          minLength: 0
+          maxLength: 200
+        type:
+          type: string
+          nullable: false
+          enum:
+            - hockey_pads
+            - hockey_skates
+            - hockey_stick
+        cost:
+          type: number
+          minimum: 0.0
+          exclusiveMinimum: true
+    ItemToEdit:
+      type: object
+      nullable: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 0
+          maxLength: 20
+        description:
+          type: string
+          minLength: 0
+          maxLength: 200
+        type:
+          type: string
+          nullable: false
+          enum:
+            - hockey_pads
+            - hockey_skates
+            - hockey_stick
+        cost:
+          type: number
+          minimum: 0.0
+          exclusiveMinimum: true
+    ItemFull:
+      type: object
+      nullable: false
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 0
+          maxLength: 20
+        description:
+          type: string
+          minLength: 0
+          maxLength: 200
+        type:
+          type: string
+          nullable: false
+          enum:
+            - hockey_pads
+            - hockey_skates
+            - hockey_stick
+        cost:
+          type: number
+          minimum: 0.0
+          exclusiveMinimum: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: false
+        updated_at:
+          type: string
+          format: date-time
+          nullable: false
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+paths:
+  '/items':
+    get:
+      summary: Get all items, which were not dleeted previously
+      responses:
+        200:
+          description: Page with items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemFull'
+  '/item':
+    post:
+      summary: Add an item into service (and database)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemToAdd'
+      responses:
+        200:
+          description: Item was added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemFull'
+        404:
+          description: In case of occurance of any exception
+          content:
+            application/json:
+              schema:
+                type: string
+                description: string with exception message
+    patch:
+      summary: Edit an existing item
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ItemToEdit'
+      responses:
+        200:
+          description: Item was edited
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemFull'
+        404:
+          description: In case of occurance of any exception (e.g. item was not found by provided id.)
+          content:
+            application/json:
+              schema:
+                type: string
+                description: string with exception message
+  '/items/{itemId}':
+    get:
+      summary: Get item by its ID
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Item was found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemFull'
+        404:
+          description: In case of occurance of any exception (e.g. item was not found by provided id.)
+          content:
+            application/json:
+              schema:
+                type: string
+                description: string with exception message
+    delete:
+      summary: Delete item by its ID
+      description: >
+        In particular the Item will not be deleted from the database
+        It will only be saved with NotNull "deletedAt" value
+        And when all items will be got - it will not be shown
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Item was deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemFull'
+        404:
+          description: In case of occurance of any exception (e.g. item was not found by provided id.)
+          content:
+            application/json:
+              schema:
+                type: string
+                description: string with exception message
