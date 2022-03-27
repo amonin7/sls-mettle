@@ -24,8 +24,8 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -66,7 +66,7 @@ class MainControllerTests {
     @Test
     void updateItem() throws Exception {
         Mockito.when(itemsService.updateItem(Mockito.any())).thenReturn(I1_UPDATED);
-        mockMvc.perform(put("/item")
+        mockMvc.perform(patch("/item")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(I1_UPDATE_JSON))
                 .andExpect(status().isOk())
