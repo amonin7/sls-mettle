@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -51,6 +52,13 @@ public class MainController {
     @GetMapping("/item/{uuid}")
     public ResponseEntity<Object> getItem(@PathVariable String uuid) {
         return processRequest(uuid, itemsService::getItem);
+    }
+
+    @GetMapping("/search")
+    public List<Item> filterItems(
+            @RequestParam(required = false, defaultValue = "") String nameFilter,
+            @RequestParam(required = false, defaultValue = "") String descriptionFilter) {
+        return this.itemsService.getItemsWithFiltering(nameFilter, descriptionFilter);
     }
 
     private <T> ResponseEntity<Object> processRequest(T input, Function<T, Item> inputMap) {

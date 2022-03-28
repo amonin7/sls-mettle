@@ -8,5 +8,6 @@ import java.util.UUID;
 
 public interface ItemsRepository extends CrudRepository<Item, UUID> {
     List<Item> findAllByDeletedAtIsNull();
+    List<Item> findAllByDeletedAtIsNullAndNameContainingAndDescriptionContaining(String name, String description);
     void deleteById(UUID uuid);
 }

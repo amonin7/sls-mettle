@@ -38,6 +38,11 @@ public class PsqlItemsService implements ItemsService {
     }
 
     @Override
+    public List<Item> getItemsWithFiltering(String name, String description) {
+        return itemsRepository.findAllByDeletedAtIsNullAndNameContainingAndDescriptionContaining(name, description);
+    }
+
+    @Override
     public Item addItem(Item item) {
         isValid(item);
         item.setUpdatedAt(Timestamp.from(Instant.now()));

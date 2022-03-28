@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface ItemsService {
     List<Item> getAllItems();
+    List<Item> getItemsWithFiltering(String name, String description);
     Item addItem(Item item);
     Item updateItem(Item item);
     Item deleteItem(String uuid);
