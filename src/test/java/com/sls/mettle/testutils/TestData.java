@@ -57,4 +57,18 @@ public class TestData {
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
     }
+
+    public static Item FILTER_ITEM1 = new Item(
+            null, "apple", "bella", ItemType.HOCKEY_PADS, 12.0,
+            null, null, null);
+    public static Item FILTER_ITEM2 = new Item(
+            null, "apple", "donna", ItemType.HOCKEY_PADS, 12.0,
+            null, null, null);
+    public static Item FILTER_ITEM3 = new Item(
+            null, "nokia", "bella", ItemType.HOCKEY_PADS, 12.0,
+            null, null, null);
+    public static Item FILTER_ITEM4 = new Item(
+            null, "nokia", "donna", ItemType.HOCKEY_PADS, 12.0,
+            null, null, null);
+
 }
