@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: sls-mettle
   description: This is a simple Spring Boot application that hosts a REST web service and persists data in a database.
-  version: 1.0.0
+  version: 1.0.1
 components:
   schemas:
     ItemToAdd:
@@ -199,3 +199,34 @@ paths:
               schema:
                 type: string
                 description: string with exception message
+  '/search':
+    get:
+      summary: Get all items, filtered by name and description
+      description: >
+        By this endpoint you could filter the saved (in database) items.
+        You have an opportunity to filter items by name and by description.
+        The filter works by searching for items that CONTAIN the provided nameFilter and descriptionFilter.
+        If both the request is made without specifying parameters (or parameters will be empty strings)
+        - then the result will be the same as the request for /items endpoint
+      parameters:
+        - in: query
+          name: nameFilter
+          required: false
+          description: The result items list would contain only items, which "name" fields contain nameFilter
+          schema:
+            type: string
+        - in: query
+          name: descriptionFilter
+          required: false
+          description: The result items list would contain only items, which "description" fields contain descriptionFilter
+          schema:
+            type: string
+      responses:
+        200:
+          description: Page with filtered items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ItemFull'
