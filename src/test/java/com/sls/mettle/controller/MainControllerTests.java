@@ -51,6 +51,20 @@ class MainControllerTests {
     }
 
     @Test
+    void searchItems() throws Exception {
+        Mockito.when(itemsService.getItemsWithFiltering("item", "descr"))
+                .thenReturn(ITEMS);
+        mockMvc.perform(get("/search?nameFilter=item&descriptionFilter=descr"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id", is(I1_SAVED.getId().toString())))
+                .andExpect(jsonPath("$[1].id", is(I2_SAVED.getId().toString())));
+        verify(itemsService, VerificationModeFactory.times(1))
+                .getItemsWithFiltering(Mockito.any(), Mockito.any());
+        reset(itemsService);
+    }
+
+    @Test
     void addItem() throws Exception {
         Mockito.when(itemsService.addItem(Mockito.any())).thenReturn(I1_SAVED);
         mockMvc.perform(post("/item")

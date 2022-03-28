@@ -76,6 +76,19 @@ class PsqlItemsServiceTest {
     }
 
     @Test
+    public void searchItemsReturnCorrectItems() {
+        Mockito.when(itemsRepository
+                        .findAllByDeletedAtIsNullAndNameContainingAndDescriptionContaining(
+                                "item", "descr"))
+                .thenReturn(ITEMS);
+
+        List<Item> items = itemsService.getItemsWithFiltering("item", "descr");
+        assertThat(items)
+                .hasSameSizeAs(ITEMS)
+                .hasSameElementsAs(ITEMS);
+    }
+
+    @Test
     public void tryAddInvalidItem() {
         assertThrows(InvalidItemException.class,
                 ()->itemsService.addItem(I_INVALID));
